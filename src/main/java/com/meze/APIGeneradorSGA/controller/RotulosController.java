@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,12 +55,17 @@ public class RotulosController {
 		
 		 String pdfFileName = CodigosPDF.valueOf(fileCode).getNombrePdf();
 		 
-		 String basePath = "src/main/resources/static/reports/";
-		
+		 //Local
+		 String basePath = "./src/main/resources/static/reports/";
+		 //Productivo (?
+//		 String basePath = "APIGeneradorSGA-0.0.1-SNAPSHOT/WEB-INF/classes/static/reports/";
+		 //String basePath = request.getServletContext().getRealPath("WEB-INF/classes/static/reports/" + pdfFileName + ".pdf");
+		//logger.info("El path url es: "+ basePath);
 	    String fileLocation= basePath + pdfFileName + ".pdf";
 	    		
-	    File downloadFile= new File(fileLocation);
-	
+	    //File downloadFile= new File(fileLocation);
+	    File downloadFile = ResourceUtils.getFile("classpath:static/reports/"+pdfFileName+".pdf");
+	    logger.info("Se encontro el archivo?: "+ downloadFile.exists());
 	    byte[] isr = Files.readAllBytes(downloadFile.toPath());
 	    ByteArrayOutputStream out = new ByteArrayOutputStream(isr.length);
 	    out.write(isr, 0, isr.length);
